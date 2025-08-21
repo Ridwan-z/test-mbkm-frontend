@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Middleware\RoleMiddleware;
 
 // Public routes
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -20,10 +21,8 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
 
     // Organizer routes
-    Route::middleware(['role:organizer,admin'])->group(function () {
-        Route::get('/my-events', [EventController::class, 'myEvents']);
-        Route::post('/events', [EventController::class, 'store']);
-        Route::put('/events/{id}', [EventController::class, 'update']);
-        Route::delete('/events/{id}', [EventController::class, 'destroy']);
-    });
+    Route::get('/my-events', [EventController::class, 'myEvents']);
+    Route::post('/events', [EventController::class, 'store']);
+    Route::put('/events/{id}', [EventController::class, 'update']);
+    Route::delete('/events/{id}', [EventController::class, 'destroy']);
 });

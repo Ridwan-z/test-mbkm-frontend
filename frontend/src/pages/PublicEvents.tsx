@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import { Input, Card, Row, Col, Spin, Empty, Modal } from "antd";
+import { Input, Card, Row, Col, Spin, Empty, Modal, Typography } from "antd";
 
 type Event = {
   id: number;
@@ -15,6 +15,7 @@ type Event = {
     name: string;
   };
 };
+const { Title } = Typography;
 
 export default function PublicEvents() {
   const [allEvents, setAllEvents] = useState<Event[]>([]);
@@ -201,16 +202,9 @@ export default function PublicEvents() {
           borderBottomRightRadius: 12,
         }}
       >
-        <h1
-          style={{
-            margin: 0,
-            color: "#fff",
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-          }}
-        >
+        <Title level={3} style={{ margin: 0, color: "#fff" }}>
           Tech Events
-        </h1>
+        </Title>
 
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <Input
@@ -221,7 +215,7 @@ export default function PublicEvents() {
             style={{
               minWidth: 220,
               maxWidth: 360,
-              height: 40,
+              height: 35,
               borderRadius: 999, // Biar oval seperti search bar modern
               padding: "0 16px",
               backgroundColor: "#fff",
@@ -238,7 +232,7 @@ export default function PublicEvents() {
           <a href="/login">
             <button
               style={{
-                padding: "8px 20px",
+                padding: "6px 20px",
                 fontWeight: 600,
                 backgroundColor: "#fff",
                 color: "#FA541C",

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+
 class EventController extends Controller
 {
     public function index(Request $request)
@@ -31,7 +32,7 @@ class EventController extends Controller
         $query->orderBy($sortBy, $sortOrder);
 
         // Pagination
-        $perPage = min($request->get('per_page', 10), 50);
+        $perPage = min($request->get('per_page', 6), 50);
         $events = $query->paginate($perPage);
 
         return response()->json([
@@ -110,14 +111,6 @@ class EventController extends Controller
             ], 404);
         }
 
-        // Check if user owns the event (organizer) or is admin
-        if (!User::isAdmin() && $event->organizer_id !== Auth::id()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Forbidden'
-            ], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'title' => 'string|max:255',
             'description' => 'string',
@@ -159,13 +152,6 @@ class EventController extends Controller
             ], 404);
         }
 
-        // Check if user owns the event (organizer) or is admin
-        if (!User::isAdmin() && $event->organizer_id !== Auth::id()) {
-            return response()->json([
-                'success' => false,
-                'me ssage' => 'Forbidden'
-            ], 403);
-        }
 
         // Check if event has orders
         if ($event->orders()->count() > 0) {

@@ -10,19 +10,22 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        if (!Auth::check()) {
+        // Ambil user dari guard JWT
+        $user = Auth::guard('jwt')->user();
+
+        // Jika tidak login
+        if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized'
+                'message' => 'Unauthorized',
             ], 401);
         }
 
-        $userRole = Auth::user()->role;
-
-        if (!in_array($userRole, $roles)) {
+        // Jika role tidak sesuai
+        if (!in_array($user->role, $roles)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Forbidden'
+                'message' => 'Forbidden',
             ], 403);
         }
 
