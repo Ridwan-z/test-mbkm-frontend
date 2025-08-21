@@ -521,7 +521,7 @@ export default function Dashboard() {
                       ? [
                           <Button
                             style={{
-                              padding: "15px 70px",
+                              padding: "12px clamp(30px, 6vw, 70px)",
                               backgroundColor: "#faad14",
                               color: "#fff",
                             }}
@@ -546,7 +546,7 @@ export default function Dashboard() {
                           </Button>,
                           <Button
                             style={{
-                              padding: "15px 70px",
+                              padding: "12px clamp(30px, 6vw, 70px)",
                               backgroundColor: "#f5222d",
                               color: "#fff",
                             }}
