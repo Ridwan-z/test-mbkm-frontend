@@ -7,6 +7,9 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicEvents from "./pages/PublicEvents";
 import "./index.css";
+import NotFoundPage from "./pages/404";
+import ForbiddenPage from "./pages/403";
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider>
@@ -22,7 +25,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               </PrivateRoute>
             }
           />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/403" element={<ForbiddenPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

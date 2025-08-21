@@ -1,7 +1,22 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import { Input, Card, Row, Col, Spin, Empty, Modal, Typography } from "antd";
-
+import {
+  Input,
+  Card,
+  Row,
+  Col,
+  Spin,
+  Empty,
+  Modal,
+  Typography,
+  Switch,
+} from "antd";
+import {
+  BulbOutlined,
+  BulbFilled,
+  MoneyCollectOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 type Event = {
   id: number;
   title: string;
@@ -26,7 +41,19 @@ export default function PublicEvents() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem("darkMode") === "true";
+  });
 
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+
+    localStorage.setItem("darkMode", darkMode.toString());
+  }, [darkMode]);
   const EVENTS_PER_PAGE = 6;
 
   const fetchEvents = async () => {
@@ -181,11 +208,8 @@ export default function PublicEvents() {
 
   return (
     <div
-      style={{
-        backgroundColor: "#FFF8F0",
-        minHeight: "100vh",
-        width: "100vw",
-      }}
+      style={{ minHeight: "100vh", width: "100vw" }}
+      className={darkMode ? "dark-mode" : ""}
     >
       {/* Top Bar */}
       <div
@@ -205,7 +229,12 @@ export default function PublicEvents() {
         <Title level={3} style={{ margin: 0, color: "#fff" }}>
           Tech Events
         </Title>
-
+        <Switch
+          checkedChildren={<BulbFilled />}
+          unCheckedChildren={<BulbOutlined />}
+          checked={darkMode}
+          onChange={setDarkMode}
+        />
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <Input
             placeholder="Cari judul event..."
@@ -310,6 +339,7 @@ export default function PublicEvents() {
                   bordered
                   hoverable
                   style={{
+                    backgroundColor: "#FFF8F0",
                     borderRadius: 12,
                     boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
                     transition: "all 0.2s",
@@ -328,6 +358,52 @@ export default function PublicEvents() {
                   <p style={{ color: "#595959", minHeight: 60 }}>
                     {event.description}
                   </p>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 8,
+                      marginTop: 12,
+                    }}
+                  >
+                    {/* Harga */}
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "4px 12px",
+                        borderRadius: 8,
+                        backgroundColor: "#52c41a", // hijau
+                        color: "#fff",
+                        fontWeight: "bold",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <MoneyCollectOutlined style={{ marginRight: 6 }} />
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format((event as any).price || 0)}
+                    </span>
+
+                    {/* Max Peserta */}
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "4px 12px",
+                        borderRadius: 8,
+                        backgroundColor: "#1890ff", // biru cerah
+                        color: "#fff",
+                        fontWeight: "bold",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <UserOutlined style={{ marginRight: 6 }} />
+                      {(event as any).max_participants || 0} Peserta
+                    </span>
+                  </div>
                 </Card>
               </Col>
             ))}

@@ -15,14 +15,19 @@ import {
   DatePicker,
   Button,
   Select,
-  message,
+  Switch,
 } from "antd";
-import { UserOutlined, LogoutOutlined, DownOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LogoutOutlined,
+  DownOutlined,
+  BulbOutlined,
+  BulbFilled,
+  MoneyCollectOutlined,
+} from "@ant-design/icons";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
-const { RangePicker } = DatePicker;
-import dayjs from "dayjs";
 
 type Event = {
   id: number;
@@ -62,6 +67,21 @@ export default function Dashboard() {
   const [endDatetime, setEndDatetime] = useState<string>("");
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem("darkMode") === "true";
+  });
+  const [notifVisible, setNotifVisible] = useState(false);
+  const [notifMessage, setNotifMessage] = useState("");
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+
+    localStorage.setItem("darkMode", darkMode.toString());
+  }, [darkMode]);
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/[^0-9]/g, ""); // Hanya angka
@@ -166,6 +186,17 @@ export default function Dashboard() {
     setSelectedEvent(null);
     setModalVisible(false);
   };
+
+  const showNotif = (message: string, duration = 2000) => {
+    setNotifMessage(message);
+    setNotifVisible(true);
+
+    setTimeout(() => {
+      setNotifVisible(false);
+      setNotifMessage("");
+    }, duration);
+  };
+
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
@@ -180,11 +211,11 @@ export default function Dashboard() {
       if (selectedEvent) {
         // Update
         await api.put(`/events/${selectedEvent.id}`, data);
-        message.success("Event berhasil diperbarui!");
+        showNotif("✅Event berhasil diperbarui!");
       } else {
         // Tambah baru
         await api.post("/events", data);
-        message.success("Event berhasil ditambahkan!");
+        showNotif("✅Event berhasil ditambahkan!");
       }
 
       setModalTambahVisible(false);
@@ -193,18 +224,19 @@ export default function Dashboard() {
       fetchEvents();
     } catch (err) {
       console.error(err);
-      message.error("Gagal menyimpan event");
+      showNotif("❌Terjadi kesalahan saat menyimpan event.");
     }
   };
 
   const handleDelete = async (eventId: number) => {
     try {
       await api.delete(`/events/${eventId}`);
-      message.success("Event berhasil dihapus");
+      showNotif("✅Event berhasil dihapus!");
+
       fetchEvents();
     } catch (err) {
       console.error(err);
-      message.error("Gagal menghapus event");
+      showNotif("❌Gagal menghapus event.");
     }
   };
 
@@ -318,7 +350,8 @@ export default function Dashboard() {
 
   return (
     <div
-      style={{ backgroundColor: "#FFF8F0", minHeight: "100vh", width: "100vw" }}
+      style={{ minHeight: "100vh", width: "100vw" }}
+      className={darkMode ? "dark-mode" : ""}
     >
       {/* Top Bar */}
       <div
@@ -338,6 +371,14 @@ export default function Dashboard() {
         <Title level={3} style={{ margin: 0, color: "#fff" }}>
           Tech Events
         </Title>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Switch
+            checkedChildren={<BulbFilled />}
+            unCheckedChildren={<BulbOutlined />}
+            checked={darkMode}
+            onChange={setDarkMode}
+          />
+        </div>
 
         <Dropdown overlay={userMenu} trigger={["click"]}>
           <div
@@ -460,6 +501,7 @@ export default function Dashboard() {
                   bordered
                   hoverable
                   style={{
+                    backgroundColor: "#FFF8F0",
                     borderRadius: 12,
                     boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
                     transition: "all 0.2s",
@@ -536,6 +578,52 @@ export default function Dashboard() {
                   <p style={{ color: "#595959", minHeight: 60 }}>
                     {ev.description}
                   </p>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 8,
+                      marginTop: 12,
+                    }}
+                  >
+                    {/* Harga */}
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "4px 12px",
+                        borderRadius: 8,
+                        backgroundColor: "#52c41a", // hijau
+                        color: "#fff",
+                        fontWeight: "bold",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <MoneyCollectOutlined style={{ marginRight: 6 }} />
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format((ev as any).price || 0)}
+                    </span>
+
+                    {/* Max Peserta */}
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "4px 12px",
+                        borderRadius: 8,
+                        backgroundColor: "#1890ff", // biru cerah
+                        color: "#fff",
+                        fontWeight: "bold",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <UserOutlined style={{ marginRight: 6 }} />
+                      {(ev as any).max_participants || 0} Peserta
+                    </span>
+                  </div>
                 </Card>
               </Col>
             ))}
@@ -704,6 +792,20 @@ export default function Dashboard() {
         okButtonProps={{ danger: true }}
       >
         <p>{eventToDelete?.title}</p>
+      </Modal>
+      <Modal
+        open={notifVisible}
+        footer={null}
+        closable={false}
+        centered
+        bodyStyle={{
+          textAlign: "center",
+          fontSize: 16,
+          fontWeight: "bold",
+          padding: "24px 16px",
+        }}
+      >
+        {notifMessage}
       </Modal>
     </div>
   );

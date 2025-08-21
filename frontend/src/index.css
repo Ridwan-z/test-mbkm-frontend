@@ -29,6 +29,7 @@ body {
   /* min-width: 320px;
   min-height: 100vh; */
   /* overflow: hidden; */
+  background-color: #ffffff;
 }
 /* Untuk WebKit browsers */
 body::-webkit-scrollbar {
@@ -70,4 +71,46 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* GLOBAL DARK MODE BACKGROUND */
+body.dark-mode {
+  background-color: #1c1a1a;
+}
+
+/* JANGAN UBAH STYLE MODAL DAN FORM */
+body.dark-mode .ant-modal-content,
+body.dark-mode .ant-form,
+body.dark-mode .ant-input,
+body.dark-mode .ant-input-number,
+body.dark-mode .ant-select-selector,
+body.dark-mode .ant-picker,
+body.dark-mode .ant-picker-input,
+body.dark-mode .ant-picker-panel,
+body.dark-mode .ant-select-dropdown,
+body.dark-mode .ant-dropdown-menu {
+  background-color: #ffffff !important;
+  color: #000 !important;
+}
+
+/* Force text input color */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode .ant-select-selection-item {
+  color: #000 !important;
+}
+
+/* Dropdown menus (logout, select options) tetap terang */
+body.dark-mode .ant-dropdown-menu-item {
+  color: #000 !important;
+}
+
+/* Placeholder juga tetap hitam */
+body.dark-mode ::placeholder {
+  color: #999 !important;
+}
+/* Pastikan notification terlihat */
+.ant-notification {
+  z-index: 9999 !important;
+  position: fixed !important;
 }
