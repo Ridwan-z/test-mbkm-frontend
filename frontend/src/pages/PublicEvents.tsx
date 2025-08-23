@@ -103,14 +103,12 @@ export default function PublicEvents() {
     setModalVisible(false);
   };
 
-  // Buat total halaman
   const totalPages = Math.ceil(
     allEvents.filter((event) =>
       event.title.toLowerCase().includes(search.toLowerCase())
     ).length / EVENTS_PER_PAGE
   );
 
-  // Fungsi untuk render pagination custom
   const renderPagination = () => {
     if (totalPages <= 1) return null;
 
@@ -150,7 +148,7 @@ export default function PublicEvents() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          flexWrap: "wrap", // ⬅ penting agar responsif
+          flexWrap: "wrap", 
           gap: 12,
           marginTop: 32,
           padding: "8px 16px",
@@ -160,7 +158,6 @@ export default function PublicEvents() {
           maxWidth: "100%",
         }}
       >
-        {/* Tombol Sebelumnya */}
         <button
           style={{
             ...circleButtonStyle,
@@ -172,7 +169,6 @@ export default function PublicEvents() {
           {"<"}
         </button>
 
-        {/* Tombol Angka & ... */}
         {pages.map((p, idx) => (
           <button
             key={idx}
@@ -191,7 +187,6 @@ export default function PublicEvents() {
           </button>
         ))}
 
-        {/* Tombol Selanjutnya */}
         <button
           style={{
             ...circleButtonStyle,
@@ -211,7 +206,6 @@ export default function PublicEvents() {
       style={{ minHeight: "100vh", width: "100vw" }}
       className={darkMode ? "dark-mode" : ""}
     >
-      {/* Top Bar */}
       <div
         style={{
           backgroundColor: "#FA541C",
@@ -245,7 +239,7 @@ export default function PublicEvents() {
               minWidth: 220,
               maxWidth: 360,
               height: 35,
-              borderRadius: 999, // Biar oval seperti search bar modern
+              borderRadius: 999, 
               padding: "0 16px",
               backgroundColor: "#fff",
               border: "1px solid #d9d9d9",
@@ -366,14 +360,13 @@ export default function PublicEvents() {
                       marginTop: 12,
                     }}
                   >
-                    {/* Harga */}
                     <span
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
                         padding: "4px 12px",
                         borderRadius: 8,
-                        backgroundColor: "#52c41a", // hijau
+                        backgroundColor: "#52c41a", 
                         color: "#fff",
                         fontWeight: "bold",
                         fontSize: "12px",
@@ -387,14 +380,13 @@ export default function PublicEvents() {
                       }).format((event as any).price || 0)}
                     </span>
 
-                    {/* Max Peserta */}
                     <span
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
                         padding: "4px 12px",
                         borderRadius: 8,
-                        backgroundColor: "#1890ff", // biru cerah
+                        backgroundColor: "#1890ff", 
                         color: "#fff",
                         fontWeight: "bold",
                         fontSize: "12px",
@@ -410,11 +402,9 @@ export default function PublicEvents() {
           </Row>
         )}
 
-        {/* Pagination */}
         {renderPagination()}
       </div>
 
-      {/* Modal Detail */}
       <Modal
         title={selectedEvent?.title}
         open={modalVisible}

@@ -62,7 +62,7 @@ export default function Dashboard() {
   const [modalTambahVisible, setModalTambahVisible] = useState(false);
   const [form] = Form.useForm();
   const [price, setPrice] = useState<number | null>(null);
-  const [priceInput, setPriceInput] = useState(""); // Untuk input berformat rupiah
+  const [priceInput, setPriceInput] = useState("");
   const [startDatetime, setStartDatetime] = useState<string>("");
   const [endDatetime, setEndDatetime] = useState<string>("");
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
@@ -84,11 +84,11 @@ export default function Dashboard() {
   }, [darkMode]);
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/[^0-9]/g, ""); // Hanya angka
+    const raw = e.target.value.replace(/[^0-9]/g, "");
     const num = parseInt(raw, 10);
 
     if (!isNaN(num)) {
-      setPrice(num); // Simpan sebagai angka
+      setPrice(num);
       setPriceInput(
         new Intl.NumberFormat("id-ID", {
           style: "currency",
@@ -113,7 +113,6 @@ export default function Dashboard() {
         res = await api.get("/my-events");
         setEvents(res.data.data || []);
       } else {
-        // Admin hanya lihat event yang published
         res = await api.get("/events", {
           params: {
             status: "published",
@@ -209,11 +208,9 @@ export default function Dashboard() {
       };
 
       if (selectedEvent) {
-        // Update
         await api.put(`/events/${selectedEvent.id}`, data);
         showNotif("✅Event berhasil diperbarui!");
       } else {
-        // Tambah baru
         await api.post("/events", data);
         showNotif("✅Event berhasil ditambahkan!");
       }
@@ -279,7 +276,7 @@ export default function Dashboard() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          flexWrap: "wrap", // ⬅ penting agar responsif
+          flexWrap: "wrap",
           gap: 12,
           marginTop: 32,
           padding: "8px 16px",
@@ -289,7 +286,6 @@ export default function Dashboard() {
           maxWidth: "100%",
         }}
       >
-        {/* Tombol Sebelumnya */}
         <button
           style={{
             ...circleButtonStyle,
@@ -320,7 +316,6 @@ export default function Dashboard() {
           </button>
         ))}
 
-        {/* Tombol Selanjutnya */}
         <button
           style={{
             ...circleButtonStyle,
@@ -353,7 +348,6 @@ export default function Dashboard() {
       style={{ minHeight: "100vh", width: "100vw" }}
       className={darkMode ? "dark-mode" : ""}
     >
-      {/* Top Bar */}
       <div
         style={{
           backgroundColor: "#FA541C",
@@ -427,7 +421,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Content */}
       <div style={{ padding: "2rem" }}>
         {loading ? (
           <Spin size="large" tip="Memuat event..." />
@@ -534,7 +527,7 @@ export default function Dashboard() {
                             onMouseOver={(e) => {
                               (
                                 e.target as HTMLButtonElement
-                              ).style.backgroundColor = "#ffc53d"; // warna kuning terang saat hover
+                              ).style.backgroundColor = "#ffc53d";
                             }}
                             onMouseOut={(e) => {
                               (
@@ -561,7 +554,7 @@ export default function Dashboard() {
                             onMouseOver={(e) => {
                               (
                                 e.target as HTMLButtonElement
-                              ).style.backgroundColor = "#ff4d4f"; // merah terang saat hover
+                              ).style.backgroundColor = "#ff4d4f";
                             }}
                             onMouseOut={(e) => {
                               (
@@ -586,14 +579,13 @@ export default function Dashboard() {
                       marginTop: 12,
                     }}
                   >
-                    {/* Harga */}
                     <span
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
                         padding: "4px 12px",
                         borderRadius: 8,
-                        backgroundColor: "#52c41a", // hijau
+                        backgroundColor: "#52c41a",
                         color: "#fff",
                         fontWeight: "bold",
                         fontSize: "12px",
@@ -607,14 +599,13 @@ export default function Dashboard() {
                       }).format((ev as any).price || 0)}
                     </span>
 
-                    {/* Max Peserta */}
                     <span
                       style={{
                         display: "inline-flex",
                         alignItems: "center",
                         padding: "4px 12px",
                         borderRadius: 8,
-                        backgroundColor: "#1890ff", // biru cerah
+                        backgroundColor: "#1890ff",
                         color: "#fff",
                         fontWeight: "bold",
                         fontSize: "12px",
@@ -633,7 +624,6 @@ export default function Dashboard() {
         {renderPagination()}
       </div>
 
-      {/* Modal Detail */}
       <Modal
         title={selectedEvent?.title}
         open={modalVisible}

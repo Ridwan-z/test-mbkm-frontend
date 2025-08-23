@@ -1,22 +1,13 @@
-// src/App.tsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
 import PublicEvents from "./pages/PublicEvents";
-import React from "react";
 import NotFoundPage from "./pages/404";
 import ForbiddenPage from "./pages/403";
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-  return <>{children}</>; // ReactNode harus dibungkus fragment
-}
-
-export default function App() {
+const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -26,9 +17,9 @@ export default function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <PrivateRoute roles={["admin", "organizer"]}>
                 <Dashboard />
-              </ProtectedRoute>
+              </PrivateRoute>
             }
           />
           <Route path="/403" element={<ForbiddenPage />} />
@@ -37,4 +28,6 @@ export default function App() {
       </BrowserRouter>
     </AuthProvider>
   );
-}
+};
+
+export default App;

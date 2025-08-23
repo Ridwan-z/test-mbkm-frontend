@@ -6,7 +6,7 @@ const PrivateRoute = ({
   children,
   roles,
 }: {
-  children: React.ReactNode; // ✅ ganti ini
+  children: React.ReactNode;
   roles?: string[];
 }) => {
   const { user, token } = useAuth();
@@ -17,7 +17,7 @@ const PrivateRoute = ({
     return <Navigate to="/403" />;
   }
 
-  return <>{children}</>; // ✅ bungkus di fragment biar aman
+  return <>{children}</>; 
 };
 
 export default PrivateRoute;

@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import api from "../api/axios";
 
-// ------------------
-// Type Declaration
-// ------------------
+
 type User = {
   id: number;
   name: string;
@@ -21,9 +19,6 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-// ------------------
-// Helper Functions
-// ------------------
 const STORAGE_KEY = "token";
 
 const saveToken = (token: string, remember: boolean) => {
@@ -45,9 +40,6 @@ const clearToken = () => {
   sessionStorage.removeItem(STORAGE_KEY);
 };
 
-// ------------------
-// Main Provider
-// ------------------
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -58,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (!tokenFromStorage) {
       setIsLoading(false);
-      logout(); // ensure user is cleared
+      logout(); 
       return;
     }
 

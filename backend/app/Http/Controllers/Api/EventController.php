@@ -15,23 +15,19 @@ class EventController extends Controller
     {
         $query = Event::with('organizer:id,name');
 
-        // Search
         if ($request->has('search') && $request->search) {
             $query->search($request->search);
         }
 
-        // Filter by status (default published for public)
         $status = $request->get('status', 'published');
         if ($status && $status !== 'all') {
             $query->where('status', $status);
         }
 
-        // Sort
         $sortBy = $request->get('sort_by', 'start_datetime');
         $sortOrder = $request->get('sort_order', 'asc');
         $query->orderBy($sortBy, $sortOrder);
 
-        // Pagination
         $perPage = min($request->get('per_page', 6), 50);
         $events = $query->paginate($perPage);
 
@@ -153,7 +149,6 @@ class EventController extends Controller
         }
 
 
-        // Check if event has orders
         if ($event->orders()->count() > 0) {
             return response()->json([
                 'success' => false,
@@ -173,22 +168,18 @@ class EventController extends Controller
     {
         $query = Event::byOrganizer(Auth::id());
 
-        // Search
         if ($request->has('search') && $request->search) {
             $query->search($request->search);
         }
 
-        // Filter by status
         if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);
         }
 
-        // Sort
         $sortBy = $request->get('sort_by', 'created_at');
         $sortOrder = $request->get('sort_order', 'desc');
         $query->orderBy($sortBy, $sortOrder);
 
-        // Pagination
         $perPage = min($request->get('per_page', 10), 50);
         $events = $query->paginate($perPage);
 

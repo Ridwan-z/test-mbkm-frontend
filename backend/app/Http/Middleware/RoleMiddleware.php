@@ -10,7 +10,6 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        // Ambil user dari guard JWT
         $user = Auth::guard('jwt')->user();
 
         // Jika tidak login

@@ -18,7 +18,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Optional: Refresh token on 401
 api.interceptors.response.use(
   (res) => res,
   async (err) => {
@@ -45,7 +44,7 @@ api.interceptors.response.use(
         }
 
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return api(originalRequest); // Retry
+        return api(originalRequest); 
       } catch (refreshError) {
         localStorage.removeItem("token");
         sessionStorage.removeItem("token");
