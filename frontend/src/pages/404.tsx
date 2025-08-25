@@ -21,7 +21,7 @@ export default function NotFoundPage() {
         subTitle="Halaman yang Anda cari tidak ditemukan."
         extra={
           <Button type="primary" onClick={() => navigate("/")}>
-            Kembali ke Beranda
+            Kembali ke Halaman Awal
           </Button>
         }
       />
